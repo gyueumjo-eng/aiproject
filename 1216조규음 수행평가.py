@@ -1,18 +1,6 @@
-st.title("🧭 MBTI 진로 & 문화 추천기")
-st.write("안녕! 너의 MBTI를 선택하면 맞춤 진로, 학과, 성격 팁, **추천 도서와 영화**를 알려줄게~")
+import streamlit as st
 
-# MBTI 옵션
-mbti_options = [
-    "INTJ", "INTP", "ENTJ", "ENTP",
-    "INFJ", "INFP", "ENFJ", "ENFP",
-    "ISTJ", "ISFJ", "ESTJ", "ESFJ",
-    "ISTP", "ISFP", "ESTP", "ESFP"
-]
-
-# MBTI 선택
-selected_mbti = st.selectbox("너의 MBTI를 골라봐 👇", mbti_options)
-
-# MBTI별 진로 및 문화 추천 데이터 (추천 도서/영화 추가)
+# --- 1. MBTI별 데이터 정의 (데이터 구조 개선 및 영화/도서 포함) ---
 # *실제 MBTI와 콘텐츠의 연관성은 재미를 위한 참고용입니다.*
 career_data = {
     "INTJ": {
@@ -145,27 +133,49 @@ career_data = {
     }
 }
 
-# 진로 추천 보여주기
+# --- 2. 앱 레이아웃 및 UI 구성 ---
+
+# 앱 제목
+st.title("🧭 MBTI 진로 & 문화 추천기")
+st.write("안녕! 너의 MBTI를 선택하면 맞춤 진로, 학과, 성격 팁, **추천 도서와 영화**를 알려줄게~")
+
+# MBTI 옵션
+mbti_options = list(career_data.keys())
+
+# MBTI 선택
+# 첫 번째 값을 기본값으로 설정하여 초기 로딩 시 오류 방지
+selected_mbti = st.selectbox("너의 MBTI를 골라봐 👇", mbti_options)
+
+# --- 3. 진로 및 문화 추천 결과 보여주기 ---
+
 if selected_mbti:
+    # 선택된 MBTI 정보 가져오기
     mbti_info = career_data[selected_mbti]
     
+    st.markdown("---")
     st.subheader(f"✨ **{selected_mbti}** 유형 분석 결과")
     
-    # 추천 문화 콘텐츠 섹션
-    st.markdown("### 📚 추천 문화 콘텐츠")
-    st.info(f"**추천 도서 📖:** {mbti_info['book']}")
-    st.info(f"**추천 영화 🎬:** {mbti_info['movie'][0]}, {mbti_info['movie'][1]}")
+    # 📚 추천 문화 콘텐츠 섹션
+    st.markdown("### 🍿 추천 문화 콘텐츠")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.info(f"**추천 도서 📖:** **{mbti_info['book']}**")
+    
+    with col2:
+        st.info(f"**추천 영화 🎬:** **{mbti_info['movie'][0]}** / **{mbti_info['movie'][1]}**")
     
     st.markdown("---")
     
-    # 추천 진로 섹션
+    # 💼 추천 진로 섹션
     st.markdown("### 💼 추천 진로 및 학과")
     
     for i, item in enumerate(mbti_info['careers']):
         # st.expander를 사용하여 결과를 펼치거나 접을 수 있게 함
         with st.expander(f"**{i+1}. 추천 진로: {item['career']}**"):
-            st.markdown(f"**추천 학과:** {item['major']}")
+            st.markdown(f"**추천 학과:** `{item['major']}`")
             st.markdown(f"**어떤 성격에게 잘 맞을까:** {item['personality']}")
             
     st.markdown("---")
-    st.caption("ℹ️ 이 추천은 참고 자료일 뿐, 당신의 진로는 무궁무진합니다! 여러 가능성을 탐색해보세요.")
+    st.caption("ℹ️ 이 추천은 참고 자료일 뿐입니다. 당신의 가능성은 무궁무진하니 여러 분야를 탐색해보세요.")
