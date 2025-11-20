@@ -1,4 +1,5 @@
 import streamlit as st
+
 # --- 1. MBTI별 데이터 정의 (특성 요약 추가) ---
 # *실제 MBTI와 콘텐츠의 연관성은 재미를 위한 참고용입니다.*
 career_data = {
